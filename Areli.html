@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rosas para Areli</title>
+
+  <!-- Fuente elegante -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1: #1b1224;
+      --bg2: #3b1637;
+      --card: rgba(255,255,255,0.06);
+      --accent: #ff5c8a;
+      --text: #fff7fb;
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,92,138,0.08), transparent 8%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2) 60%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .card{
+      width:min(980px, 96%);
+      border-radius:18px;
+      padding:28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:24px;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* Left: message */
+    .message{
+      padding:18px 8px;
+    }
+    .headline{
+      font-family: "Great Vibes", cursive;
+      font-size:64px;
+      line-height:0.9;
+      margin:6px 0 8px;
+      letter-spacing:1px;
+      color: #fff;
+      text-shadow: 0 8px 30px rgba(255,92,138,0.14);
+    }
+    .sub{
+      color: #ffdfe9;
+      margin-bottom:18px;
+      font-size:18px;
+    }
+    .note{
+      background: linear-gradient(90deg, rgba(255,92,138,0.08), rgba(255,200,220,0.02));
+      padding:14px;
+      border-radius:12px;
+      font-size:15px;
+      line-height:1.5;
+      max-width:680px;
+    }
+
+    /* Right: bouquet / roses */
+    .bouquet{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      position:relative;
+    }
+
+    /* Rose card */
+    .rose-wrap{
+      width:380px;
+      height:380px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+      overflow:visible;
+      transform: translateY(0);
+    }
+
+    /* SVG roses container */
+    .roses{
+      width:340px;
+      height:340px;
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      grid-auto-rows: 1fr;
+      gap:8px;
+      place-items:center;
+      transform-origin:center;
+      animation: gentle-rotate 10s ease-in-out infinite;
+    }
+
+    @keyframes gentle-rotate{
+      0%{ transform: rotate(-2deg); }
+      50%{ transform: rotate(2deg); }
+      100%{ transform: rotate(-2deg); }
+    }
+
+    /* Each rose */
+    .rose{
+      width:98px;
+      height:98px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+      transition: transform .35s cubic-bezier(.2,.9,.2,1);
+      cursor:pointer;
+    }
+    .rose:hover{ transform: translateY(-8px) scale(1.08) rotate(-6deg); }
+
+    /* Name plate */
+    .name-plate{
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      right:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .ribbon{
+      background: linear-gradient(90deg,#ff8faf, #ff6a8c);
+      padding:10px 20px;
+      border-radius:999px;
+      box-shadow: 0 6px 18px rgba(255,92,138,0.14);
+      font-family: "Great Vibes", cursive;
+      font-size:34px;
+      color:white;
+      letter-spacing:0.6px;
+    }
+
+    /* Controls */
+    .controls{
+      margin-top:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      background:transparent;
+      border:2px solid rgba(255,255,255,0.08);
+      padding:10px 12px;
+      border-radius:10px;
+      color:var(--text);
+      cursor:pointer;
+      font-weight:600;
+      backdrop-filter: blur(6px);
+    }
+    .btn-primary{
+      background: linear-gradient(90deg,#ff6a8c,#ff9bb9);
+      border: none;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(255,92,138,0.12);
+    }
+
+    /* Petals falling */
+    .petal{
+      position:fixed;
+      pointer-events:none;
+      user-select:none;
+      opacity:0.95;
+      transform-origin:center;
+      will-change: transform, top, left;
+    }
+
+    /* Footer small */
+    .credit{
+      grid-column:1 / -1;
+      margin-top:18px;
+      text-align:center;
+      color: rgba(255,255,255,0.45);
+      font-size:13px;
+    }
+
+    /* Responsive */
+    @media (max-width:880px){
+      .card{ grid-template-columns: 1fr; padding:18px;}
+      .rose-wrap{ width:320px; height:320px; margin:0 auto;}
+      .roses{ width:300px; height:300px; }
+      .headline{ font-size:48px; text-align:center;}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="titulo">
+    <div class="message">
+      <h1 id="titulo" class="headline">Para Areli</h1>
+      <p class="sub">Un pequeño detalle que viene del corazón</p>
+
+      <div class="note" id="messageText" aria-live="polite">
+        Querida <strong>Areli</strong>, recibe estas rosas como muestra de cariño y aprecio.
+        Cada pétalo lleva un deseo: alegría, salud, y muchos momentos felices.
+      </div>
+
+      <div class="controls" style="margin-top:18px;">
+        <button class="btn btn-primary" id="btnSurprise" title="Sorpresa">Enviar rosas ✨</button>
+        <button class="btn" id="btnPetals" title="Dejar caer pétalos">Dejar caer pétalos 🌸</button>
+        <button class="btn" id="btnChangeText" title="Cambiar texto">Personalizar mensaje ✍️</button>
+      </div>
+
+      <p class="credit">Diseñado con cariño • Haz clic en las rosas para verlas bailar 💃</p>
+    </div>
+
+    <div class="bouquet" aria-hidden="false">
+      <div class="rose-wrap" role="img" aria-label="Bouquet de rosas">
+        <div class="roses" id="rosesGrid">
+          <!-- Se insertan 9 SVG rosas por JS (o puedes ponerlas aquí estáticas) -->
+        </div>
+
+        <div class="name-plate" aria-hidden="false">
+          <div class="ribbon" id="nameRibbon">Areli</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas para confetti -->
+    <canvas id="confettiCanvas" style="position:absolute; inset:0; pointer-events:none;"></canvas>
+  </div>
+
+<script>
+/* -------------------------
+  Código JS para la interacción
+   - Inserta rosas SVG
+   - Efecto confetti / pétalos
+   - Personalizar mensaje
+   - Pequeña "baila" al hacer click en cada rosa
+---------------------------*/
+
+const rosesGrid = document.getElementById('rosesGrid');
+const btnSurprise = document.getElementById('btnSurprise');
+const btnPetals = document.getElementById('btnPetals');
+const btnChangeText = document.getElementById('btnChangeText');
+const messageText = document.getElementById('messageText');
+const nameRibbon = document.getElementById('nameRibbon');
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctx = confettiCanvas.getContext('2d');
+
+function resizeCanvas(){
+  confettiCanvas.width = innerWidth;
+  confettiCanvas.height = innerHeight;
+}
+resizeCanvas();
+addEventListener('resize', resizeCanvas);
+
+/* Small inline SVG rose (simple stylized rose) */
+const roseSVG = `
+<svg class="rose" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rosa">
+  <defs>
+    <linearGradient id="gA" x1="0" x2="1">
+      <stop offset="0" stop-color="#ff8db0"/>
+      <stop offset="1" stop-color="#ff4c7a"/>
+    </linearGradient>
+    <linearGradient id="gB" x1="0" x2="1">
+      <stop offset="0" stop-color="#195a33"/>
+      <stop offset="1" stop-color="#0f3d22"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Petals -->
+  <g transform="translate(8,4)">
+    <ellipse cx="24" cy="18" rx="18" ry="14" fill="url(#gA)" opacity="0.98" />
+    <ellipse cx="14" cy="16" rx="10" ry="8" fill="url(#gA)" opacity="0.98" transform="rotate(-22 14 16)"/>
+    <ellipse cx="34" cy="16" rx="10" ry="8" fill="url(#gA)" opacity="0.98" transform="rotate(22 34 16)"/>
+    <circle cx="24" cy="18" r="6" fill="#ff2f6a"/>
+  </g>
+
+  <!-- Stem -->
+  <path d="M34 34 C34 44, 32 54, 28 60" stroke="url(#gB)" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+  <!-- Leaves -->
+  <path d="M24 40 C14 36, 10 46, 24 48" fill="#1b5f36"/>
+  <path d="M32 44 C40 40, 46 50, 34 52" fill="#154b2a"/>
+</svg>`;
+
+/* Insert 9 rosas */
+for(let i=0;i<9;i++){
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = roseSVG;
+  const svgEl = wrapper.firstElementChild;
+  // add small random transform to each rose
+  const rx = (Math.random()*12 - 6).toFixed(2);
+  const ry = (Math.random()*8 - 4).toFixed(2);
+  svgEl.style.transform = `rotate(${rx}deg) translateY(${ry}px)`;
+  svgEl.addEventListener('click', () => {
+    svgEl.animate([
+      { transform: svgEl.style.transform },
+      { transform: svgEl.style.transform + ' translateY(-18px) rotate(6deg) scale(1.06)' },
+      { transform: svgEl.style.transform }
+    ], { duration: 650, easing: 'cubic-bezier(.2,.9,.2,1)' });
+    // small confetti burst at click position
+    const rect = svgEl.getBoundingClientRect();
+    confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2);
+  });
+  rosesGrid.appendChild(svgEl);
+}
+
+/* Confetti (simple particle system) */
+let particles = [];
+function confettiBurst(x,y){
+  const count = 28;
+  for(let i=0;i<count;i++){
+    particles.push({
+      x: x + (Math.random()*40-20),
+      y: y + (Math.random()*40-20),
+      vx: (Math.random()*6-3),
+      vy: (Math.random()*-8 - 2),
+      rot: Math.random()*360,
+      vr: (Math.random()*8-4),
+      size: 8 + Math.random()*10,
+      life: 80 + Math.random()*40,
+      colorHue: 320 + Math.random()*80 // pinkish hues
+    });
+  }
+}
+
+/* Petals fall (visual decorative) */
+function spawnPetal(){
+  const emoji = '🌸';
+  const el = document.createElement('div');
+  el.className = 'petal';
+  el.style.left = (Math.random()*innerWidth) + 'px';
+  el.style.top = (-20 + Math.random()*-100) + 'px';
+  el.style.fontSize = (14 + Math.random()*18) + 'px';
+  el.textContent = emoji;
+  document.body.appendChild(el);
+
+  const dur = 4200 + Math.random()*4800;
+  const endX = parseFloat(el.style.left) + (Math.random()*200-100);
+  el.animate([
+    { transform: `translateY(0) rotate(${Math.random()*360}deg)`, opacity:1 },
+    { transform: `translateY(${innerHeight + 120}px) rotate(${Math.random()*720}deg)`, opacity:0.08 }
+  ], { duration: dur, easing: 'linear' });
+
+  setTimeout(()=> el.remove(), dur + 50);
+}
+
+/* Animation loop for confetti particles */
+function tick(){
+  ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.vy += 0.18; // gravity
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.life--;
+    if(p.life <= 0 || p.y > innerHeight + 50) { particles.splice(i,1); continue; }
+
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.rot * Math.PI/180);
+    ctx.fillStyle = `hsl(${p.colorHue} 85% 64%)`;
+    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+    ctx.restore();
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* Buttons interactions */
+btnSurprise.addEventListener('click', ()=> {
+  // change text to a sweet line and burst confetti
+  messageText.innerHTML = `Areli, que este día esté lleno de sonrisas y momentos inolvidables. ¡Con cariño! 💖`;
+  confettiBurst(innerWidth/2, innerHeight/3);
+  // quick petal shower
+  for(let i=0;i<18;i++){ setTimeout(spawnPetal, i*150); }
+});
+
+btnPetals.addEventListener('click', ()=>{
+  // spawn a small shower of petals
+  for(let i=0;i<28;i++){ setTimeout(spawnPetal, i*120); }
+});
+
+btnChangeText.addEventListener('click', ()=>{
+  const nuevo = prompt("Escribe el mensaje que quieres mostrar para Areli:", messageText.textContent.trim());
+  if(nuevo !== null){
+    if(nuevo.trim().length === 0) {
+      messageText.textContent = "Un detalle con cariño para Areli.";
+    } else {
+      messageText.textContent = nuevo;
+    }
+  }
+});
+
+/* Allow editing the name by click on ribbon */
+nameRibbon.addEventListener('click', ()=>{
+  const nuevo = prompt("Escribe el nombre que quieres en la placa:", nameRibbon.textContent.trim());
+  if(nuevo !== null && nuevo.trim() !== ''){
+    nameRibbon.textContent = nuevo.trim();
+  }
+});
+
+/* Accessibility: allow keyboard activation of main action */
+btnSurprise.addEventListener('keyup', (e) => { if(e.key === 'Enter') btnSurprise.click();});
+
+/* Optional: auto spawn gentle petals in background sometimes */
+let gentleTimer = setInterval(()=>{
+  if(Math.random() < 0.55) spawnPetal();
+}, 1600);
+
+/* Clean up when page hides (performance) */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden) clearInterval(gentleTimer);
+  else gentleTimer = setInterval(()=>{ if(Math.random()<0.55) spawnPetal(); }, 1600);
+});
+</script>
+</body>
+</html>
